@@ -1,0 +1,28 @@
+<p-card fxFlex class="profile-card" fxLayout="column" fxLayoutAlign="center center">
+  <ng-template pTemplate="header">
+    <div class="profile-header">
+      Profile
+    </div>
+  </ng-template>
+  <div class="profile-container" fxLayout="column" fxLayoutAlign="center center">
+    <div class="profile-photo" fxLayout="row" fxLayoutAlign="center center">
+      <p-avatar [image]="selectedImage" size="xlarge"></p-avatar>
+    </div>
+
+    <div class="user-data" fxLayout="column" fxLayoutAlign="start center">
+      <p><strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}</p>
+      <p><strong>E-mail:</strong> {{ user.email }}</p>
+      <p><strong>Phone:</strong> {{ user.phone }}</p>
+      <p><strong>Birthday:</strong> {{ user.birthday | date: 'dd/MM/yyyy' }}</p>
+      <p><strong>Created at:</strong> {{ user.createdAt | date: 'dd/MM/yyyy' }}</p>
+      <p><strong>Last Login:</strong> {{ user.lastLogin | date: 'dd/MM/yyyy HH:mm' }}</p>
+
+      <p *ngIf="user.cars && user.cars.length > 0"><strong>Cars:</strong></p>
+      <ul>
+        <li *ngFor="let car of user.cars">
+          {{ car.year }} - {{ car.model }} ({{ car.licensePlate }}) - {{ car.color }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</p-card>

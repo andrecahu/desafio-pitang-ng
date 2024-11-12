@@ -1,0 +1,9 @@
+<p-menubar [model]="itens">
+  <ng-template pTemplate="start">
+    <img src="logo_pitang.png" alt="Logo" style="max-width: 100px; height: auto;"/>
+  </ng-template>
+  <ng-template pTemplate="end">
+
+    <p-button label="Login" class="p-button-outlined" (click)="navigateToSignin()"></p-button>
+  </ng-template>
+</p-menubar>

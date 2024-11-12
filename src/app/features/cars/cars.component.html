@@ -1,0 +1,39 @@
+<app-car-form></app-car-form>
+
+<div class="adjust-table-width">
+  <p-table [columns]="cols" [value]="cars">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{ col.header }}
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-car>
+      <tr>
+        <td>{{ car.year }}</td>
+        <td>{{ car.licensePlate }}</td>
+        <td>{{ car.model }}</td>
+        <td>{{ car.color }}</td>
+        <td>
+          <button
+            type="button"
+            pButton
+            icon="pi pi-pencil"
+            (click)="editCar(car)">
+          </button>
+        </td>
+        <td>
+          <button
+            type="button"
+            pButton
+            severity="danger"
+            icon="pi pi-trash"
+            (click)="deleteCar(car)">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
