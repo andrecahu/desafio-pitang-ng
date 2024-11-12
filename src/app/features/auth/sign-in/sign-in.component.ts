@@ -5,7 +5,9 @@ import {FloatLabelModule} from "primeng/floatlabel";
 import {InputTextModule} from "primeng/inputtext";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {SharedModule} from "../../../shared/shared.module";
-import {Car} from '../../../models/car.model';
+import {LoginRequest} from '../../../models/login-request.model';
+import {Router} from '@angular/router';
+import {SignInService} from '../../../core/services/sign-in.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -16,34 +18,38 @@ import {Car} from '../../../models/car.model';
         FloatLabelModule,
         InputTextModule,
         ReactiveFormsModule,
-        SharedModule
+        SharedModule,
     ],
+  providers: [
+    SignInService,
+  ],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css'
 })
 export class SignInComponent {
-  carForm: FormGroup;
-  cars: Car[] = [];
+  signInForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-    this.carForm = this.fb.group({
-      year: ['', Validators.required],
-      licensePlate: ['', Validators.required],
-      model: ['', Validators.required],
-      color: ['', Validators.required]
+  constructor(private fb: FormBuilder,
+              private signInService: SignInService,
+              private router: Router,
+  ) {
+    this.signInForm = this.fb.group({
+      login: ['', Validators.required],
+      password: ['', Validators.required],
 
     });
   }
 
-  addCar(): void {
-    const car = {
-      year: this.carForm.get('year')?.value,
-      licensePlate: this.carForm.get('licensePlate')?.value,
-      model: this.carForm.get('model')?.value,
-      color: this.carForm.get('color')?.value
+  login(): void {
+    const login: LoginRequest = {
+      login: this.signInForm.get('login')?.value,
+      password: this.signInForm.get('password')?.value,
     };
 
-    //subscribe service
+    this.signInService.signIn(login).subscribe({
+      next: () => this.router.navigateByUrl('/me'),
+      error: () => console.log("error")
+    })
   }
 
 }
