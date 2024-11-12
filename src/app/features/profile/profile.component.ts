@@ -6,6 +6,7 @@ import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {SharedModule} from '../../shared/shared.module';
 import {FlexModule} from '@ngbracket/ngx-layout';
+import {MeService} from './services/me.service';
 
 @Component({
   selector: 'app-profile',
@@ -19,21 +20,30 @@ import {FlexModule} from '@ngbracket/ngx-layout';
     SharedModule,
     FlexModule
   ],
+  providers:[
+    MeService,
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
-  user: User = {
-    firstName: 'André',
-    lastName: 'Silva',
-    email: 'andre@email.com',
-    phone: '123456789',
-    birthday: new Date('1990-01-01'),
-    cars: [{ year: 2020, model: 'Fusca', licensePlate: 'ABC-1234', color: 'Blue' }],
-    createdAt: new Date('2020-01-01'),
-    lastLogin: new Date(),
-  };
+  user: User = {birthday: undefined, email: '', firstName: '', lastName: '', phone: ''};
+
+  constructor(private meService: MeService) {
+  }
+
+  ngOnInit() {
+    this.getMe();
+  }
 
   selectedImage: string = '';
 
+  getMe(){
+    this.meService.getMe().subscribe((user: User ) => {
+      this.user = user;
+    },
+    (error) => {
+      // console.log(error);
+    })
+  }
 }
