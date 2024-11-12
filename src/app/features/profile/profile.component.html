@@ -15,7 +15,7 @@
       <p><strong>Phone:</strong> {{ user.phone }}</p>
       <p><strong>Birthday:</strong> {{ user.birthday | date: 'dd/MM/yyyy' }}</p>
       <p><strong>Created at:</strong> {{ user.createdAt | date: 'dd/MM/yyyy' }}</p>
-      <p><strong>Last Login:</strong> {{ user.lastLogin | date: 'dd/MM/yyyy HH:mm' }}</p>
+      <p><strong>Last Login:</strong> {{ user.lastLogin | date: 'dd/MM/yyyy'}}</p>
 
       <p *ngIf="user.cars && user.cars.length > 0"><strong>Cars:</strong></p>
       <ul>
