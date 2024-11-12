@@ -16,6 +16,10 @@
         <input id="email" formControlName="email" type="email" pInputText/>
       </div>
       <div fxFlex class="input-container">
+        <label for="phone">Phone</label>
+        <input id="phone" formControlName="phone" type="number" pInputText/>
+      </div>
+      <div fxFlex class="input-container">
         <label for="birthday">Birthday</label>
         <input id="birthday" formControlName="birthday" type="date" pInputText/>
       </div>
@@ -31,6 +35,16 @@
       </div>
     </div>
   </form>
+  <div fxLayoutAlign="center">
+    <button
+      style="width: 60%; margin-bottom: 20px"
+      fxLayoutAlign="center"
+      type="button"
+      pButton
+      (click)="submit()">
+      Create
+    </button>
+  </div>
 
   <p-table [value]="cars" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">

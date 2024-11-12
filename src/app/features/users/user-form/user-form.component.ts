@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {InputTextModule} from 'primeng/inputtext';
 import {FloatLabelModule} from 'primeng/floatlabel';
 import {FlexLayoutModule} from '@ngbracket/ngx-layout';
 import {SharedModule} from '../../../shared/shared.module';
 import {Car} from '../../../models/car.model';
+import {UserService} from '../services/user.service';
 
 @Component({
   selector: 'app-user-form',
@@ -17,6 +18,9 @@ import {Car} from '../../../models/car.model';
     FloatLabelModule,
     FlexLayoutModule,
   ],
+  providers: [
+    UserService,
+  ],
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.css']
 })
@@ -25,7 +29,8 @@ export class UserFormComponent {
   carForm: FormGroup;
   cars: Car[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+              private userService: UserService,) {
     this.userForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -54,28 +59,25 @@ export class UserFormComponent {
 
     this.cars.push(car);
 
-    this.carForm.patchValue({
-      year: '',
-      licensePlate: '',
-      model: '',
-      color: ''
-    });
+    this.carForm.reset()
   }
 
-  deleteCar(car:Car){
-    this.cars.splice(this.cars.indexOf(car),1);
+  deleteCar(car: Car) {
+    this.cars.splice(this.cars.indexOf(car), 1);
   }
 
   submit() {
-    if (this.userForm.valid) {
-      const userData = {
-        ...this.userForm.value,
-        cars: this.cars
-      };
-
-      console.log('User data:', userData);
-    } else {
-      console.log('Form is invalid');
-    }
+    const userData = {
+      ...this.userForm.value,
+      cars: this.cars
+    };
+    this.userService.createUser(userData).subscribe({
+      next: () => {
+        this.userForm.reset();
+        this.carForm.reset();
+        this.cars = []
+      },
+      error: () => console.log('Erro'),
+    })
   }
 }
