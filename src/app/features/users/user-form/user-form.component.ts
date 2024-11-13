@@ -7,6 +7,8 @@ import {SharedModule} from '../../../shared/shared.module';
 import {Car} from '../../../models/car.model';
 import {UserService} from '../services/user.service';
 import {User} from '../../../models/user.model';
+import {ToastModule} from 'primeng/toast';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-user-form',
@@ -18,9 +20,11 @@ import {User} from '../../../models/user.model';
     InputTextModule,
     FloatLabelModule,
     FlexLayoutModule,
+    ToastModule,
   ],
   providers: [
     UserService,
+    MessageService,
   ],
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.css']
@@ -33,7 +37,8 @@ export class UserFormComponent {
   @Output() updateUserList = new EventEmitter();
 
   constructor(private fb: FormBuilder,
-              private userService: UserService,) {
+              private userService: UserService,
+              private messageService: MessageService,) {
     this.userForm = this.fb.group({
       id: ['', Validators.required],
       firstName: ['', Validators.required],
@@ -114,7 +119,9 @@ export class UserFormComponent {
         this.limpaFormularios()
         this.updateUserList.emit()
       },
-      error: () => console.log('Erro'),
+      error: (error) => {
+        this.messageService.add({severity: 'error', summary: error.error.status, detail: error.error.message})
+      }
     })
   }
 
@@ -124,7 +131,9 @@ export class UserFormComponent {
         this.limpaFormularios()
         this.updateUserList.emit();
       },
-      error: () => console.log('Erro')
+      error: (error) => {
+        this.messageService.add({severity: 'error', summary: error.error.status, detail: error.error.message})
+      }
     })
   }
 
