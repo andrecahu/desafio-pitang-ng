@@ -3,6 +3,7 @@ import {DatePipe} from '@angular/common';
 import {UserFormComponent} from './user-form/user-form.component';
 import {SharedModule} from '../../shared/shared.module';
 import {User} from '../../models/user.model';
+import {UserService} from './services/user.service';
 
 @Component({
   selector: 'app-users',
@@ -13,6 +14,8 @@ import {User} from '../../models/user.model';
 })
 export class UsersComponent {
   users!: User[];
+  editUser: User = {email: '', firstName: '', lastName: '', phone: ''};
+
 
   cols: Array<{ field: string; header: string }> = [
     { field: 'firstName', header: 'First Name' },
@@ -26,33 +29,31 @@ export class UsersComponent {
     { field: 'delete', header: '' },
   ];
 
-  ngOnInit() {
-    this.users = [
-      {
-        id: 'd5635000-b73b-4589-aeaa-d121c2310a57',
-        firstName: 'Andre',
-        lastName: 'Melo',
-        email: 'andrecahu@email.com',
-        birthday: new Date(),
-        login: 'andre.cahu',
-        phone: '988888888',
-        cars: [
-          {
-            year: 2012,
-            licensePlate: 'DRA-2802',
-            model: 'Audi',
-            color: 'Black'
-          }
-        ],
-        createdAt: new Date(),
-        lastLogin: new Date()
-      },
-    ];
+  constructor(private userService: UserService) {
   }
 
-  editUser(user: User) {
-    console.log(user);
-    console.log("teste");
+  ngOnInit() {
+    this.getUsers()
+  }
+
+  editUserById(user: User){
+    if(user.id) {
+      this.userService.getUserById(user.id).subscribe({
+        next: (editUser) => {
+          this.editUser = editUser;
+        },
+        error: () => console.log('error'),
+      })
+    }
+  }
+
+  getUsers(){
+    this.userService.getUsers().subscribe({
+      next: (users) => {
+        this.users = users;
+      },
+      error: () => console.log('error'),
+    })
   }
 
   deleteUser(user: User){
