@@ -29,7 +29,7 @@
         <label for="login">Login</label>
         <input id="login" formControlName="login" type="text" pInputText/>
       </div>
-      <div *ngIf="editUser.id == null" fxFlex class="input-container">
+      <div *ngIf="editUser?.id == null" fxFlex class="input-container">
         <label for="password">Password</label>
         <input id="password"  formControlName="password" type="password" pInputText/>
       </div>
@@ -46,7 +46,7 @@
     </button>
   </div>
 
-  <div *ngIf="!editUser.id">
+  <div *ngIf="!editUser?.id">
     <p-table [value]="cars" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>

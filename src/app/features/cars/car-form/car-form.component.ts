@@ -27,13 +27,14 @@ import {CarService} from '../services/car.service';
 export class CarFormComponent {
   carForm: FormGroup;
   cars: Car[] = [];
-  _editCar!: Car;
+  _editCar: Car = {color: '', licensePlate: '', model: ''};
   @Output() updateCarList = new EventEmitter();
 
 
   constructor(private fb: FormBuilder,
               private carService: CarService,) {
     this.carForm = this.fb.group({
+      id: ['', Validators.required],
       year: ['', Validators.required],
       licensePlate: ['', Validators.required],
       model: ['', Validators.required],
@@ -45,15 +46,27 @@ export class CarFormComponent {
   @Input()
   set editCar(car: Car) {
     this._editCar = car;
-    // this.updateForm(car)
+    this.updateForm(car)
   }
 
   get editCar(): Car {
     return this._editCar;
   }
 
+  updateForm(car: Car){
+    this.carForm.patchValue({
+      id: car.id,
+      year: car.year,
+      licensePlate: car.licensePlate,
+      model: car.model,
+      color: car.color,
+    })
+  }
+
   submit(){
-    if (!this.editCar.id){
+    if (this.editCar?.id){
+      this.editByCarId()
+    }else{
       this.createCar()
     }
   }
@@ -72,9 +85,19 @@ export class CarFormComponent {
     })
   }
 
+  editByCarId(){
+    this.carService.editCarById(this.carForm.value).subscribe({
+      next: () => {
+        this.limpaFormularios()
+        this.updateCarList.emit();
+      },
+      error: () => console.log('Erro')
+    })
+  }
+
   limpaFormularios() {
     this.carForm.reset();
-    this.editCar = {year: undefined, licensePlate: '', model: '', color: ''}
+    this.editCar = {color: '', licensePlate: '', model: ''};
   }
 
 }
