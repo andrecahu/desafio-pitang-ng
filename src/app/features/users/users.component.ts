@@ -14,7 +14,7 @@ import {UserService} from './services/user.service';
 })
 export class UsersComponent {
   users!: User[];
-  editUser: User = {email: '', firstName: '', lastName: '', phone: ''};
+  editUser!: User;
 
 
   cols: Array<{ field: string; header: string }> = [
@@ -38,7 +38,7 @@ export class UsersComponent {
 
   editUserById(user: User){
     if(user.id) {
-      this.userService.getUserById(user.id).subscribe({
+      this.userService.getUserById(user).subscribe({
         next: (editUser) => {
           this.editUser = editUser;
         },

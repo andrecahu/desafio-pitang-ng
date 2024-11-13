@@ -29,7 +29,7 @@ export class UserFormComponent {
   userForm: FormGroup;
   carForm: FormGroup;
   cars: Car[] = [];
-  _editUser: User = {email: '', firstName: '', lastName: '', phone: ''};
+  _editUser!: User;
   @Output() updateUserList = new EventEmitter();
 
   constructor(private fb: FormBuilder,
