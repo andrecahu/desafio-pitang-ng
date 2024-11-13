@@ -19,4 +19,14 @@ export class CarService {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.post<SignInResponse>(this.apiUrl, car, {headers}).pipe();
   }
+
+  getCars(): Observable<Car[]> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.get<Car[]>(this.apiUrl, {headers}).pipe();
+  }
+
+  getCarById(car: Car): Observable<Car> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.get<Car>(`${this.apiUrl}/${car.id}`, { headers }).pipe();
+  }
 }

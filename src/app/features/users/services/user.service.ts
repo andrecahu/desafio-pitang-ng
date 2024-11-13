@@ -20,9 +20,9 @@ export class UserService {
     return this.http.post<SignInResponse>(this.apiUrl, usuario, {headers}).pipe();
   }
 
-  getUserById(id: string): Observable<User> {
+  getUserById(user: User): Observable<User> {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.http.get<User>(`${this.apiUrl}/${id}`, { headers }).pipe();
+    return this.http.get<User>(`${this.apiUrl}/${user.id}`, { headers }).pipe();
   }
 
   getUsers(): Observable<User[]> {

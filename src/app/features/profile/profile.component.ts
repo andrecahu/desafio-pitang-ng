@@ -27,7 +27,7 @@ import {MeService} from './services/me.service';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
-  user: User = {birthday: undefined, email: '', firstName: '', lastName: '', phone: ''};
+  user!: User;
 
   constructor(private meService: MeService) {
   }

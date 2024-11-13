@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {InputTextModule} from 'primeng/inputtext';
 import {FloatLabelModule} from 'primeng/floatlabel';
@@ -27,7 +27,7 @@ import {CarService} from '../services/car.service';
 export class CarFormComponent {
   carForm: FormGroup;
   cars: Car[] = [];
-  editCar: Car = {year: undefined, licensePlate: '', model: '', color: ''};
+  _editCar!: Car;
   @Output() updateCarList = new EventEmitter();
 
 
@@ -40,6 +40,16 @@ export class CarFormComponent {
       color: ['', Validators.required]
 
     });
+  }
+
+  @Input()
+  set editCar(car: Car) {
+    this._editCar = car;
+    // this.updateForm(car)
+  }
+
+  get editCar(): Car {
+    return this._editCar;
   }
 
   submit(){
