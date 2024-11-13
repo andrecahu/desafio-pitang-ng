@@ -30,7 +30,7 @@ export class UserFormComponent {
   carForm: FormGroup;
   cars: Car[] = [];
   _editUser: User = {email: '', firstName: '', lastName: '', phone: ''};
-  @Output() updateList = new EventEmitter();
+  @Output() updateUserList = new EventEmitter();
 
   constructor(private fb: FormBuilder,
               private userService: UserService,) {
@@ -110,7 +110,7 @@ export class UserFormComponent {
     this.userService.createUser(userData).subscribe({
       next: () => {
         this.limpaFormularios()
-        this.updateList.emit()
+        this.updateUserList.emit()
       },
       error: () => console.log('Erro'),
     })
@@ -120,7 +120,7 @@ export class UserFormComponent {
     this.userService.editUserById(this.userForm.value).subscribe({
       next: () => {
         this.limpaFormularios()
-        this.updateList.emit();
+        this.updateUserList.emit();
       },
       error: () => console.log('Erro')
     })

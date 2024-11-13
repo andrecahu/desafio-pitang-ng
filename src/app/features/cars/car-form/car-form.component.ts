@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {InputTextModule} from 'primeng/inputtext';
 import {FloatLabelModule} from 'primeng/floatlabel';
 import {FlexLayoutModule} from '@ngbracket/ngx-layout';
 import {SharedModule} from '../../../shared/shared.module';
 import {Car} from '../../../models/car.model';
+import {CarService} from '../services/car.service';
 
 @Component({
   selector: 'app-car-form',
@@ -17,14 +18,21 @@ import {Car} from '../../../models/car.model';
     FloatLabelModule,
     FlexLayoutModule,
   ],
+  providers: [
+    CarService,
+  ],
   templateUrl: './car-form.component.html',
   styleUrl: './car-form.component.css'
 })
 export class CarFormComponent {
   carForm: FormGroup;
   cars: Car[] = [];
+  editCar: Car = {year: undefined, licensePlate: '', model: '', color: ''};
+  @Output() updateCarList = new EventEmitter();
 
-  constructor(private fb: FormBuilder) {
+
+  constructor(private fb: FormBuilder,
+              private carService: CarService,) {
     this.carForm = this.fb.group({
       year: ['', Validators.required],
       licensePlate: ['', Validators.required],
@@ -34,15 +42,29 @@ export class CarFormComponent {
     });
   }
 
-  addCar(): void {
-    const car = {
-      year: this.carForm.get('year')?.value,
-      licensePlate: this.carForm.get('licensePlate')?.value,
-      model: this.carForm.get('model')?.value,
-      color: this.carForm.get('color')?.value
+  submit(){
+    if (!this.editCar.id){
+      this.createCar()
+    }
+  }
+
+  createCar(): void {
+    const carData = {
+      ...this.carForm.value
     };
 
-    //subscribe service
+    this.carService.createCar(carData).subscribe({
+      next: () => {
+        this.limpaFormularios()
+        this.updateCarList.emit()
+      },
+      error: () => console.log('Erro'),
+    })
+  }
+
+  limpaFormularios() {
+    this.carForm.reset();
+    this.editCar = {year: undefined, licensePlate: '', model: '', color: ''}
   }
 
 }

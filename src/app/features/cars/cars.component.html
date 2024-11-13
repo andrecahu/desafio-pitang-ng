@@ -1,4 +1,4 @@
-<app-car-form></app-car-form>
+<app-car-form (updateCarList)="getCars()"></app-car-form>
 
 <div class="adjust-table-width">
   <p-table [columns]="cols" [value]="cars">

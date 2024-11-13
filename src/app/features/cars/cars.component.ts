@@ -36,6 +36,10 @@ export class CarsComponent {
     ]
   }
 
+  getCars(){
+
+  }
+
   editCar(cars: Car) {
     console.log(cars);
     console.log("teste");
