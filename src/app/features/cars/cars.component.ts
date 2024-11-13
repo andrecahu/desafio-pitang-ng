@@ -59,6 +59,11 @@ export class CarsComponent {
   }
 
   deleteCar(car: Car){
-    //service delete
+    this.carService.deleteCarById(car).subscribe({
+      next: () => {
+        this.getCars();
+      },
+      error: () => console.log('error'),
+    })
   }
 }

@@ -34,4 +34,9 @@ export class CarService {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.put<User>(`${this.apiUrl}/${car.id}`, car, { headers }).pipe();
   }
+
+  deleteCarById(car: Car){
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.delete<Car>(`${this.apiUrl}/${car.id}`, { headers }).pipe();
+  }
 }
