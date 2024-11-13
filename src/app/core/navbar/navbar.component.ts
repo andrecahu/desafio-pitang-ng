@@ -27,7 +27,7 @@ export class NavbarComponent {
   updateItensMenu(){
     this.itens = [
       { label: 'Usuários', routerLink: '/users', icon: 'pi pi-users', visible: true },
-      { label: 'Carros', routerLink: '/cars', icon: 'pi pi-car', visible: this.isAuthenticated },
+      { label: 'Carros', routerLink: '/cars', icon: 'pi pi-car', visible: true },
       { label: 'Perfil', routerLink: '/me', icon: 'pi pi-user', visible: true }
     ];
   }
