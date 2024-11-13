@@ -64,7 +64,6 @@ export class UserFormComponent {
   }
 
   updateForm(user: User) {
-    this.userForm.get('password')?.disable()
     this.userForm.patchValue({
       id: user.id,
       firstName: user.firstName,
@@ -111,6 +110,7 @@ export class UserFormComponent {
     this.userService.createUser(userData).subscribe({
       next: () => {
         this.limpaFormularios()
+        this.updateList.emit()
       },
       error: () => console.log('Erro'),
     })
