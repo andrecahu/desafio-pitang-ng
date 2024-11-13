@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {InputTextModule} from 'primeng/inputtext';
 import {FloatLabelModule} from 'primeng/floatlabel';
@@ -6,6 +6,7 @@ import {FlexLayoutModule} from '@ngbracket/ngx-layout';
 import {SharedModule} from '../../../shared/shared.module';
 import {Car} from '../../../models/car.model';
 import {UserService} from '../services/user.service';
+import {User} from '../../../models/user.model';
 
 @Component({
   selector: 'app-user-form',
@@ -28,10 +29,13 @@ export class UserFormComponent {
   userForm: FormGroup;
   carForm: FormGroup;
   cars: Car[] = [];
+  _editUser: User = {email: '', firstName: '', lastName: '', phone: ''};
+  @Output() updateList = new EventEmitter();
 
   constructor(private fb: FormBuilder,
               private userService: UserService,) {
     this.userForm = this.fb.group({
+      id: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -47,6 +51,30 @@ export class UserFormComponent {
       color: ['', Validators.required]
 
     });
+  }
+
+  @Input()
+  set editUser(user: User) {
+    this._editUser = user;
+    this.updateForm(user)
+  }
+
+  get editUser(): User {
+    return this._editUser;
+  }
+
+  updateForm(user: User) {
+    this.userForm.get('password')?.disable()
+    this.userForm.patchValue({
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      birthday: user.birthday,
+      login: user.login,
+      password: user.password,
+      phone: user.phone,
+    })
   }
 
   addCar() {
@@ -67,17 +95,41 @@ export class UserFormComponent {
   }
 
   submit() {
+    if (!this.editUser.id) {
+      this.createUser()
+    } else {
+      this.editUserById()
+    }
+  }
+
+  createUser() {
     const userData = {
       ...this.userForm.value,
       cars: this.cars
-    };
+    }
+
     this.userService.createUser(userData).subscribe({
       next: () => {
-        this.userForm.reset();
-        this.carForm.reset();
-        this.cars = []
+        this.limpaFormularios()
       },
       error: () => console.log('Erro'),
     })
+  }
+
+  editUserById() {
+    this.userService.editUserById(this.userForm.value).subscribe({
+      next: () => {
+        this.limpaFormularios()
+        this.updateList.emit();
+      },
+      error: () => console.log('Erro')
+    })
+  }
+
+  limpaFormularios() {
+    this.userForm.reset();
+    this.carForm.reset();
+    this.cars = []
+    this.editUser = {email: '', firstName: '', lastName: '', phone: ''}
   }
 }

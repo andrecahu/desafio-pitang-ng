@@ -19,4 +19,19 @@ export class UserService {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.post<SignInResponse>(this.apiUrl, usuario, {headers}).pipe();
   }
+
+  getUserById(id: string): Observable<User> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.get<User>(`${this.apiUrl}/${id}`, { headers }).pipe();
+  }
+
+  getUsers(): Observable<User[]> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.get<User[]>(this.apiUrl, {headers}).pipe();
+  }
+
+  editUserById(usuario: User): Observable<User> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.put<User>(`${this.apiUrl}/${usuario.id}`, usuario, { headers }).pipe();
+  }
 }
