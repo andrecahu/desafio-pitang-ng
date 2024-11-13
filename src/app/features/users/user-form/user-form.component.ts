@@ -29,7 +29,7 @@ export class UserFormComponent {
   userForm: FormGroup;
   carForm: FormGroup;
   cars: Car[] = [];
-  _editUser!: User;
+  _editUser: User  = {email: '', firstName: '', lastName: '', phone: ''};
   @Output() updateUserList = new EventEmitter();
 
   constructor(private fb: FormBuilder,
@@ -64,16 +64,18 @@ export class UserFormComponent {
   }
 
   updateForm(user: User) {
-    this.userForm.patchValue({
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      birthday: user.birthday,
-      login: user.login,
-      password: user.password,
-      phone: user.phone,
-    })
+    if(user){
+      this.userForm.patchValue({
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        birthday: user.birthday,
+        login: user.login,
+        password: user.password,
+        phone: user.phone,
+      })
+    }
   }
 
   addCar() {
@@ -94,10 +96,10 @@ export class UserFormComponent {
   }
 
   submit() {
-    if (!this.editUser.id) {
-      this.createUser()
-    } else {
+    if (this.editUser?.id) {
       this.editUserById()
+    } else {
+      this.createUser()
     }
   }
 
