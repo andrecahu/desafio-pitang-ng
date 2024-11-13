@@ -7,6 +7,8 @@ import {CardModule} from 'primeng/card';
 import {SharedModule} from '../../shared/shared.module';
 import {FlexModule} from '@ngbracket/ngx-layout';
 import {MeService} from './services/me.service';
+import {MessageService} from 'primeng/api';
+import {ToastModule} from 'primeng/toast';
 
 @Component({
   selector: 'app-profile',
@@ -18,10 +20,12 @@ import {MeService} from './services/me.service';
     CardModule,
     CommonModule,
     SharedModule,
-    FlexModule
+    FlexModule,
+    ToastModule
   ],
   providers:[
     MeService,
+    MessageService,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
@@ -29,7 +33,8 @@ import {MeService} from './services/me.service';
 export class ProfileComponent {
   user!: User;
 
-  constructor(private meService: MeService) {
+  constructor(private meService: MeService,
+              private messageService: MessageService,) {
   }
 
   ngOnInit() {
@@ -39,11 +44,14 @@ export class ProfileComponent {
   selectedImage: string = '';
 
   getMe(){
-    this.meService.getMe().subscribe((user: User ) => {
-      this.user = user;
-    },
-    (error) => {
-       console.log(error);
+    this.meService.getMe().subscribe({
+      next: (user) => {
+        this.user = user
+      },
+      error: (error) => {
+        this.messageService.add({severity: 'error', summary: error.error.status, detail: error.error.message})
+      }
     })
   }
+
 }

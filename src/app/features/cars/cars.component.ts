@@ -5,13 +5,17 @@ import {SharedModule} from '../../shared/shared.module';
 import {Car} from '../../models/car.model';
 import {User} from '../../models/user.model';
 import {CarService} from './services/car.service';
+import {MessageService} from 'primeng/api';
+import {HttpErrorResponse} from '@angular/common/http';
+import {ToastModule} from 'primeng/toast';
 
 @Component({
   selector: 'app-cars',
   standalone: true,
-  imports: [SharedModule, DatePipe, CarFormComponent],
+  imports: [SharedModule, DatePipe, CarFormComponent, ToastModule],
   providers: [
     CarService,
+    MessageService
   ],
   templateUrl: './cars.component.html',
   styleUrl: './cars.component.css'
@@ -30,7 +34,8 @@ export class CarsComponent {
     { field: 'delete', header: '' },
     ];
 
-  constructor(private carService: CarService) {
+  constructor(private carService: CarService,
+              private messageService: MessageService,) {
   }
 
   ngOnInit() {
@@ -42,7 +47,9 @@ export class CarsComponent {
       next: (cars) => {
         this.cars = cars;
       },
-      error: () => console.log('error'),
+      error: (error) => {
+        this.messageService.add({severity: 'error', summary: error.error.status, detail: error.error.message})
+      }
     })
   }
 
@@ -52,13 +59,22 @@ export class CarsComponent {
         next: (editCar) => {
           this.editCar = editCar;
         },
-        error: () => console.log('error'),
+        error: (error) => {
+          this.messageService.add({severity: 'error', summary: error.error.status, detail: error.error.message})
+        }
       })
     }
 
   }
 
   deleteCar(car: Car){
-    //service delete
+    this.carService.deleteCarById(car).subscribe({
+      next: () => {
+        this.getCars();
+      },
+      error: (error) => {
+        this.messageService.add({severity: 'error', summary: error.error.status, detail: error.error.message})
+      }
+    })
   }
 }

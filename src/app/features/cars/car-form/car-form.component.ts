@@ -6,6 +6,8 @@ import {FlexLayoutModule} from '@ngbracket/ngx-layout';
 import {SharedModule} from '../../../shared/shared.module';
 import {Car} from '../../../models/car.model';
 import {CarService} from '../services/car.service';
+import {MessageService} from 'primeng/api';
+import {ToastModule} from 'primeng/toast';
 
 @Component({
   selector: 'app-car-form',
@@ -17,9 +19,11 @@ import {CarService} from '../services/car.service';
     InputTextModule,
     FloatLabelModule,
     FlexLayoutModule,
+    ToastModule,
   ],
   providers: [
     CarService,
+    MessageService,
   ],
   templateUrl: './car-form.component.html',
   styleUrl: './car-form.component.css'
@@ -32,7 +36,8 @@ export class CarFormComponent {
 
 
   constructor(private fb: FormBuilder,
-              private carService: CarService,) {
+              private carService: CarService,
+              private messageService: MessageService) {
     this.carForm = this.fb.group({
       id: ['', Validators.required],
       year: ['', Validators.required],
@@ -81,7 +86,9 @@ export class CarFormComponent {
         this.limpaFormularios()
         this.updateCarList.emit()
       },
-      error: () => console.log('Erro'),
+      error: (error) => {
+        this.messageService.add({severity: 'error', summary: error.error.status, detail: error.error.message})
+      }
     })
   }
 
@@ -91,7 +98,9 @@ export class CarFormComponent {
         this.limpaFormularios()
         this.updateCarList.emit();
       },
-      error: () => console.log('Erro')
+      error: (error) => {
+        this.messageService.add({severity: 'error', summary: error.error.status, detail: error.error.message})
+      }
     })
   }
 

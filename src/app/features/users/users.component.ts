@@ -4,11 +4,14 @@ import {UserFormComponent} from './user-form/user-form.component';
 import {SharedModule} from '../../shared/shared.module';
 import {User} from '../../models/user.model';
 import {UserService} from './services/user.service';
+import {MessageService} from 'primeng/api';
+import {ToastModule} from 'primeng/toast';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [SharedModule, DatePipe, UserFormComponent],
+  imports: [SharedModule, DatePipe, UserFormComponent, ToastModule],
+  providers:[MessageService],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
@@ -29,7 +32,8 @@ export class UsersComponent {
     { field: 'delete', header: '' },
   ];
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,
+              private messageService: MessageService,) {
   }
 
   ngOnInit() {
@@ -42,7 +46,9 @@ export class UsersComponent {
         next: (editUser) => {
           this.editUser = editUser;
         },
-        error: () => console.log('error'),
+        error: (error) => {
+          this.messageService.add({severity: 'error', summary: error.error.status, detail: error.error.message})
+        }
       })
     }
   }
@@ -52,7 +58,9 @@ export class UsersComponent {
       next: (users) => {
         this.users = users;
       },
-      error: () => console.log('error'),
+      error: (error) => {
+        this.messageService.add({severity: 'error', summary: error.error.status, detail: error.error.message})
+      }
     })
   }
 
@@ -61,7 +69,9 @@ export class UsersComponent {
       next: () => {
         this.getUsers();
       },
-      error: () => console.log('error'),
+      error: (error) => {
+        this.messageService.add({severity: 'error', summary: error.error.status, detail: error.error.message})
+      }
     })
   }
 }

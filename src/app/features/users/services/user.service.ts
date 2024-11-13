@@ -35,7 +35,7 @@ export class UserService {
     return this.http.put<User>(`${this.apiUrl}/${usuario.id}`, usuario, { headers }).pipe();
   }
 
-  deleteUserById(usuario: User): Observable<User> {
+  deleteUserById(usuario: User){
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.delete<User>(`${this.apiUrl}/${usuario.id}`, { headers }).pipe();
   }
