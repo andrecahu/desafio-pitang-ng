@@ -57,6 +57,11 @@ export class UsersComponent {
   }
 
   deleteUser(user: User){
-    //service delete
+    this.userService.deleteUserById(user).subscribe({
+      next: () => {
+        this.getUsers();
+      },
+      error: () => console.log('error'),
+    })
   }
 }
